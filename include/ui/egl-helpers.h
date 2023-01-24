@@ -60,6 +60,8 @@ int qemu_egl_init_dpy_mesa(EGLNativeDisplayType dpy, DisplayGLMode mode);
 
 #endif
 
+int qemu_egl_init_dpy_wayland(EGLNativeDisplayType dpy, DisplayGLMode mode);
+
 EGLContext qemu_egl_init_ctx(void);
 bool qemu_egl_has_dmabuf(void);
 

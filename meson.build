@@ -1273,6 +1273,26 @@ if not get_option('gtk').auto() or have_system
   endif
 endif
 
+gtk4 = not_found
+vte4 = not_found
+if (not get_option('gtk4').auto() or have_system)
+  if gtk.found()
+    error('Both GTK3 & GTK4 are enabled. Only one can be enabled.')
+  endif
+  gtk4 = dependency('gtk4',
+                    method: 'pkg-config',
+                    required: get_option('gtk4'),
+                    kwargs: static_kwargs)
+  if gtk4.found()
+    if not get_option('vte').auto() or have_system
+      vte4 = dependency('vte-2.91-gtk4',
+                        method: 'pkg-config',
+                        required: get_option('vte'),
+                        kwargs: static_kwargs)
+    endif
+  endif
+endif
+
 x11 = not_found
 if gtkx11.found()
   x11 = dependency('x11', method: 'pkg-config', required: gtkx11.found(),
@@ -1848,6 +1868,8 @@ if glusterfs.found()
 endif
 config_host_data.set('CONFIG_GTK', gtk.found())
 config_host_data.set('CONFIG_VTE', vte.found())
+config_host_data.set('CONFIG_GTK4', gtk4.found())
+config_host_data.set('CONFIG_VTE4', vte4.found())
 config_host_data.set('CONFIG_GTK_CLIPBOARD', have_gtk_clipboard)
 config_host_data.set('CONFIG_LIBATTR', have_old_libattr)
 config_host_data.set('CONFIG_LIBCAP_NG', libcap_ng.found())
@@ -1895,6 +1917,7 @@ config_host_data.set('CONFIG_VNC_JPEG', jpeg.found())
 config_host_data.set('CONFIG_VNC_SASL', sasl.found())
 config_host_data.set('CONFIG_VIRTFS', have_virtfs)
 config_host_data.set('CONFIG_VTE', vte.found())
+config_host_data.set('CONFIG_VTE4', vte4.found())
 config_host_data.set('CONFIG_XKBCOMMON', xkbcommon.found())
 config_host_data.set('CONFIG_KEYUTILS', keyutils.found())
 config_host_data.set('CONFIG_GETTID', has_gettid)
@@ -3638,7 +3661,7 @@ subdir('tools')
 subdir('pc-bios')
 subdir('docs')
 subdir('tests')
-if gtk.found()
+if gtk.found() or gtk4.found()
   subdir('po')
 endif
 

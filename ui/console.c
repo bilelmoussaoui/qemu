@@ -2618,6 +2618,9 @@ void qemu_display_register(QemuDisplay *ui)
 bool qemu_display_find_default(DisplayOptions *opts)
 {
     static DisplayType prio[] = {
+#if defined(CONFIG_GTK4) 
+        DISPLAY_TYPE_GTK4,
+#endif
 #if defined(CONFIG_GTK)
         DISPLAY_TYPE_GTK,
 #endif

@@ -107,6 +107,14 @@ if gtk.found()
   ui_modules += {'gtk' : gtk_ss}
 endif
 
+if gtk4.found() and not gtk.found()
+  gtk_version = '4.0'
+  glib_version = '2.56'
+  gtk4_ss = ss.source_set()
+  gtk4_ss.add(gtk4, vte4, files('gtk4.c', 'gtk4-gfx-vc.c', 'gtk4-vte-vc.c'))
+  ui_modules += {'gtk4' : gtk4_ss}
+endif
+
 if sdl.found()
   softmmu_ss.add(when: 'CONFIG_WIN32', if_true: files('win32-kbd-hook.c'))
 

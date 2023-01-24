@@ -477,6 +477,11 @@ int qemu_egl_init_dpy_x11(EGLNativeDisplayType dpy, DisplayGLMode mode)
 #endif
 }
 
+int qemu_egl_init_dpy_wayland(EGLNativeDisplayType dpy, DisplayGLMode mode)
+{
+    return qemu_egl_init_dpy(dpy, 0, mode);
+}
+
 int qemu_egl_init_dpy_mesa(EGLNativeDisplayType dpy, DisplayGLMode mode)
 {
 #ifdef EGL_MESA_platform_gbm

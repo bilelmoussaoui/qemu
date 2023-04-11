@@ -1206,6 +1206,8 @@ static void displaychangelistener_display_console(DisplayChangeListener *dcl,
     displaychangelistener_gfx_switch(dcl, con->surface,
                                      con->scanout.kind == SCANOUT_SURFACE);
 
+    info_report("scanout kind %i", con->scanout.kind);
+
     if (con->scanout.kind == SCANOUT_DMABUF &&
         displaychangelistener_has_dmabuf(dcl)) {
         dcl->ops->dpy_gl_scanout_dmabuf(dcl, con->scanout.dmabuf);
@@ -1994,7 +1996,7 @@ void dpy_gl_scanout_texture(QemuConsole *con,
 {
     DisplayState *s = con->ds;
     DisplayChangeListener *dcl;
-
+    info_report("dpy_gl_scanout_texture");
     con->scanout.kind = SCANOUT_TEXTURE;
     con->scanout.texture = (ScanoutTexture) {
         backing_id, backing_y_0_top, backing_width, backing_height,
@@ -2018,6 +2020,7 @@ void dpy_gl_scanout_dmabuf(QemuConsole *con,
 {
     DisplayState *s = con->ds;
     DisplayChangeListener *dcl;
+    info_report("dpy_gl_scanout_dmabuf");
 
     con->scanout.kind = SCANOUT_DMABUF;
     con->scanout.dmabuf = dmabuf;

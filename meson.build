@@ -1741,6 +1741,13 @@ dbus_display = get_option('dbus_display') \
   .require(opengl.found() and gbm.found(),
            error_message: '-display dbus requires epoxy/egl and gbm') \
   .allowed()
+cairo = not_found
+if dbus_display
+  cairo = dependency('cairo',
+                     kwargs: static_kwargs,
+                     method: 'pkg-config',
+                    )
+endif
 
 have_virtfs = get_option('virtfs') \
     .require(targetos == 'linux' or targetos == 'darwin',

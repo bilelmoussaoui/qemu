@@ -81,7 +81,7 @@ if dbus_display
                                           '--interface-prefix', 'org.qemu.',
                                           '--c-namespace', 'QemuDBus',
                                           '--generate-c-code', '@BASENAME@'])
-  dbus_ss.add(when: [gio, pixman, opengl, gbm],
+  dbus_ss.add(when: [gio, pixman, opengl, gbm, cairo],
               if_true: [files(
                 'dbus-chardev.c',
                 'dbus-clipboard.c',

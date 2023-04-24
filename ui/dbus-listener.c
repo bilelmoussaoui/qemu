@@ -68,6 +68,7 @@ static void dbus_update_gl_cb(GObject *source_object,
 static void dbus_call_update_gl(DBusDisplayListener *ddl,
                                 int x, int y, int w, int h)
 {
+    trace_dbus_update_gl(x, y, w, h);
     graphic_hw_gl_block(ddl->dcl.con, true);
     glFlush();
     qemu_dbus_display1_listener_call_update_dmabuf(ddl->proxy,
@@ -90,6 +91,7 @@ static void dbus_scanout_disable(DisplayChangeListener *dcl)
 static void dbus_scanout_dmabuf(DisplayChangeListener *dcl,
                                 QemuDmaBuf *dmabuf)
 {
+    trace_dbus_scanout_dmabuf(dmabuf->width, dmabuf->height, dmabuf->stride);
     DBusDisplayListener *ddl = container_of(dcl, DBusDisplayListener, dcl);
     g_autoptr(GError) err = NULL;
     g_autoptr(GUnixFDList) fd_list = NULL;
@@ -123,6 +125,7 @@ static void dbus_scanout_texture(DisplayChangeListener *dcl,
                                  uint32_t x, uint32_t y,
                                  uint32_t w, uint32_t h)
 {
+    trace_dbus_scanout_texture(tex_id, backing_width, backing_height, x, y, w, h);
     QemuDmaBuf dmabuf = {
         .width = backing_width,
         .height = backing_height,
@@ -209,6 +212,7 @@ static void dbus_scanout_update(DisplayChangeListener *dcl,
                                 uint32_t x, uint32_t y,
                                 uint32_t w, uint32_t h)
 {
+    trace_dbus_scanout_update(x, y, w, h);
     DBusDisplayListener *ddl = container_of(dcl, DBusDisplayListener, dcl);
 
     dbus_call_update_gl(ddl, x, y, w, h);

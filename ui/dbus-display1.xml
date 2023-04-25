@@ -39,8 +39,9 @@
       "Text" (see :dbus:prop:`Type` and other properties).
 
       Interactions with a console may be done with
-      :dbus:iface:`org.qemu.Display1.Keyboard` and
-      :dbus:iface:`org.qemu.Display1.Mouse` interfaces when available.
+      :dbus:iface:`org.qemu.Display1.Keyboard`,
+      :dbus:iface:`org.qemu.Display1.Mouse` and
+      :dbus:iface:`org.qemu.Display1.Touch` interfaces when available.
   -->
   <interface name="org.qemu.Display1.Console">
     <!--
@@ -234,6 +235,70 @@
         Whether the mouse is using absolute movements.
     -->
     <property name="IsAbsolute" type="b" access="read"/>
+  </interface>
+
+  <!--
+      org.qemu.Display1.Touch:
+
+      This interface in implemented on ``/org/qemu/Display1/Console_$id`` (see
+      :dbus:iface:`~org.qemu.Display1.Console` documentation).
+  -->
+  <interface name="org.qemu.Display1.Touch">
+    <!--
+        Begin:
+        @num_slot: The slot number.
+        @x: The x coordinates.
+        @y: The y coordinates.
+
+        Send a touch gesture begin event.
+    -->
+    <method name="Begin">
+      <arg type="t" name="num_slot" direction="in"/>
+      <arg type="d" name="x" direction="in"/>
+      <arg type="d" name="y" direction="in"/>
+    </method>
+
+    <!--
+        Update:
+        @num_slot: The slot number.
+        @x: The x coordinates.
+        @y: The y coordinates.
+
+        Send a touch gesture update event.
+    -->
+    <method name="Update">
+      <arg type="t" name="num_slot" direction="in"/>
+      <arg type="d" name="x" direction="in"/>
+      <arg type="d" name="y" direction="in"/>
+    </method>
+
+    <!--
+        End:
+        @num_slot: The slot number.
+        @x: The x coordinates.
+        @y: The y coordinates.
+
+        Send a touch gesture end event.
+    -->
+    <method name="End">
+      <arg type="t" name="num_slot" direction="in"/>
+      <arg type="d" name="x" direction="in"/>
+      <arg type="d" name="y" direction="in"/>
+    </method>
+
+    <!--
+        Cancel:
+        @num_slot: The slot number.
+        @x: The x coordinates.
+        @y: The y coordinates.
+
+        Send a touch gesture cancel event.
+    -->
+    <method name="Cancel">
+      <arg type="t" name="num_slot" direction="in"/>
+      <arg type="d" name="x" direction="in"/>
+      <arg type="d" name="y" direction="in"/>
+    </method>
   </interface>
 
   <!--

@@ -1,6 +1,7 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
+#include "ui/input.h"
 #include "ui/qemu-pixman.h"
 #include "qom/object.h"
 #include "qemu/notify.h"
@@ -96,6 +97,19 @@ bool kbd_put_qcode_console(QemuConsole *s, int qcode, bool ctrl);
 void kbd_put_string_console(QemuConsole *s, const char *str, int len);
 void kbd_put_keysym(int keysym);
 
+/* Touch devices */
+typedef struct touch_slot {
+    int x;
+    int y;
+    int tracking_id;
+} touch_slot;
+
+gboolean console_handle_touch_event(QemuConsole *con,
+                                    struct touch_slot touch_slots[INPUT_EVENT_SLOTS_MAX],
+                                    uint64_t num_slot,
+                                    int width, int height,
+                                    double x, double y,
+                                    InputMultitouchType type);
 /* consoles */
 
 #define TYPE_QEMU_CONSOLE "qemu-console"

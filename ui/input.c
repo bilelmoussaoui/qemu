@@ -214,6 +214,7 @@ static void qemu_input_event_trace(QemuConsole *src, InputEvent *evt)
     InputKeyEvent *key;
     InputBtnEvent *btn;
     InputMoveEvent *move;
+    InputMultitouchEvent *mtt;
 
     if (src) {
         idx = qemu_console_get_index(src);
@@ -251,6 +252,11 @@ static void qemu_input_event_trace(QemuConsole *src, InputEvent *evt)
         move = evt->u.abs.data;
         name = InputAxis_str(move->axis);
         trace_input_event_abs(idx, name, move->value);
+        break;
+    case INPUT_EVENT_KIND_MTT:
+        mtt = evt->u.mtt.data;
+        name = InputAxis_str(mtt->axis);
+        trace_input_event_mtt(idx, name, mtt->value);
         break;
     case INPUT_EVENT_KIND__MAX:
         /* keep gcc happy */
@@ -538,6 +544,42 @@ void qemu_input_queue_abs(QemuConsole *src, InputAxis axis, int value,
     InputEvent evt = {
         .type = INPUT_EVENT_KIND_ABS,
         .u.abs.data = &move,
+    };
+
+    qemu_input_event_send(src, &evt);
+}
+
+void qemu_input_queue_mtt(QemuConsole *src, InputMultitouchType type,
+                          int slot, int tracking_id)
+{
+    InputMultitouchEvent mtt = {
+        .type = type,
+        .slot = slot,
+        .tracking_id = tracking_id,
+    };
+    InputEvent evt = {
+        .type = INPUT_EVENT_KIND_MTT,
+        .u.mtt.data = &mtt,
+    };
+
+    qemu_input_event_send(src, &evt);
+}
+
+void qemu_input_queue_mtt_abs(QemuConsole *src, InputAxis axis, int value,
+                              int min_in, int max_in, int slot, int tracking_id)
+{
+    InputMultitouchEvent mtt = {
+        .type = INPUT_MULTITOUCH_TYPE_DATA,
+        .slot = slot,
+        .tracking_id = tracking_id,
+        .axis = axis,
+        .value = qemu_input_scale_axis(value, min_in, max_in,
+                                       INPUT_EVENT_ABS_MIN,
+                                       INPUT_EVENT_ABS_MAX),
+    };
+    InputEvent evt = {
+        .type = INPUT_EVENT_KIND_MTT,
+        .u.mtt.data = &mtt,
     };
 
     qemu_input_event_send(src, &evt);
